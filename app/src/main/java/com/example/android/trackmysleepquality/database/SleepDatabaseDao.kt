@@ -16,4 +16,49 @@
 
 package com.example.android.trackmysleepquality.database
 
-interface SleepDatabaseDao
+import androidx.lifecycle.LiveData
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.Query
+import androidx.room.Update
+
+@Dao
+interface SleepDatabaseDao {
+
+    @Insert
+    fun insert(night: SleepNight)
+
+    @Update
+    fun update(night: SleepNight)
+
+    @Query("SELECT * FROM daily_sleep_quality_table WHERE nightId = :key")
+    fun get(key: Long): SleepNight
+
+    // inefficient - the choice of what to delete is done in our code
+//    @Delete
+//    fun delete(night: SleepNight)
+
+    // drawback - we need to know or fetch what is in the table; not efficient for clearing
+//    @Delete
+//    fun deleteAllNights(nights: List<SleepNight>): Int
+
+    @Query("DELETE FROM daily_sleep_quality_table")
+    fun clear()
+
+    // There is a built-in, amazing feature of Room that gives back LiveData.
+    // Room makes sure this LiveData is updated whenever the database is updated.
+    // This means we only need to get this list once, then attach an observer to it.
+    @Query("SELECT * FROM daily_sleep_quality_table ORDER BY nightId DESC")
+    fun getAllNights(): LiveData<List<SleepNight>>
+
+    // The return type is nullable because, in the beginning or when we clear the table,
+    // there is no tonight row value.
+    @Query("SELECT * FROM daily_sleep_quality_table ORDER BY nightId DESC LIMIT 1")
+    fun getTonight(): SleepNight?
+
+    /**
+     * Selects and returns the night with given nightId.
+     */
+    @Query("SELECT * from daily_sleep_quality_table WHERE nightId = :key")
+    fun getNightWithId(key: Long): LiveData<SleepNight>
+}

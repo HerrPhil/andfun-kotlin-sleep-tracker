@@ -16,8 +16,14 @@
 
 package com.example.android.trackmysleepquality
 
+import android.os.Build
 import android.os.Bundle
+import android.view.View
+import android.view.WindowInsetsController
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.graphics.Insets
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 
 
 /**
@@ -48,5 +54,33 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_main)
+
+        //
+        // START OF EDGE-TO-EDGE ADAPTATION
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById<View>(R.id.nav_host_fragment)) { v: View, insets: WindowInsetsCompat ->
+            val systemBars: Insets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(0, systemBars.top, 0, 0)
+            insets
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            val insetsController = window.insetsController
+            val appearance: Int = WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
+            insetsController?.setSystemBarsAppearance(appearance, appearance)
+
+            // the following clears this setting
+//            insetsController?.setSystemBarsAppearance(0, appearance)
+        } else {
+            val decor: View = window.decorView
+            val configureVisibility: Int = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+
+            // the following clears this setting
+//            val mixed: Int = 0
+
+            decor.systemUiVisibility = configureVisibility
+        }
+        // END OF EDGE-TO-EDGE ADAPTATION
+        //
+
     }
 }
