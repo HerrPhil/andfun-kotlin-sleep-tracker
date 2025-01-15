@@ -125,3 +125,10 @@ You can also compare your code locally with the branch of the following step.
 Notice any issues with a repository? Please file a github issue in the repository.
 
 
+# RecyclerView - SleepQualityTracker app
+
+This is the extension of the toy app for Lesson 7.
+
+It covers the RecyclerView, its adapter, the view holder class implementation,
+DiffUtil data refresh, data binding, introduction to click listener on items,
+headers, navigate on click, headers, and grid layout.
